@@ -17,6 +17,7 @@ const debug = require('debug')('textlint:core');
 import {getProcessorMatchExtension} from "./plugins/proccesor-helper";
 import MarkdownProcessor from "./plugins/markdown/MarkdownProcessor";
 import TextProcessor from "./plugins/text/TextProcessor";
+import JavaScriptProcessor from "./plugins/javascript/JavaScriptProcessor";
 // add all the node types as listeners
 function addListenRule(rule, target) {
     Object.keys(rule).forEach(nodeType => {
@@ -32,7 +33,8 @@ export default class TextlintCore extends EventEmitter {
         // Markdown and Text are for backward compatibility.
         this.processors = [
             new MarkdownProcessor(config),
-            new TextProcessor(config)
+            new TextProcessor(config),
+            new JavaScriptProcessor(config)
         ];
         this.ruleManager = new RuleManager();
         // temporary property
