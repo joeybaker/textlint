@@ -1,6 +1,7 @@
 // LICENSE : MIT
 "use strict";
-import {parse} from "markdown-to-ast";
+import {parse} from "esprima";
+import {parse as makrdownToAst } from "markdown-to-ast";
 export default class MarkdownProcessor {
     constructor(config) {
         this.config = config;
@@ -8,26 +9,26 @@ export default class MarkdownProcessor {
 
     static availableExtensions() {
         return [
-            ".md",
-            ".markdown",
-            ".mdown",
-            ".mkdn",
-            ".mkd",
-            ".mdwn",
-            ".mkdown",
-            ".ron"
+            ".js",
+            ".es6",
+            ".jsx"
         ];
     }
 
     processor(ext) {
         return {
+            // processは複数のastを返せるのでは?
             preProcess(text, filePath) {
-                return parse(text);
+                var ast = parse(text, {
+                    comments: true
+                });
+                var comment = ast.comments[0];
+                return makrdownToAst(comment.value);
             },
             postProcess(messages, filePath) {
                 return {
                     messages,
-                    filePath: filePath ? filePath : "<markdown>"
+                    filePath: filePath ? filePath : "<javascript>"
                 };
             }
         };

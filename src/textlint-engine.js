@@ -9,6 +9,7 @@ import assert from "assert";
 import { findFiles } from "./util/find-util";
 import MarkdownProcessor from "./plugins/markdown/MarkdownProcessor";
 import TextProcessor from "./plugins/text/TextProcessor";
+import JavaScriptProcessor from "./plugins/javascript/JavaScriptProcessor";
 const debug = require('debug')('textlint:cli-engine');
 class TextLintEngine {
     /**
@@ -26,7 +27,7 @@ class TextLintEngine {
             this.config = new Config(options);
         }
         // default Processor Constructors
-        this.Processors = [MarkdownProcessor, TextProcessor];
+        this.Processors = [MarkdownProcessor, TextProcessor, JavaScriptProcessor];
     }
 
     /**
