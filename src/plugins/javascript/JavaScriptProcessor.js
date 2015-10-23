@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 import {parse} from "esprima";
-import {parse as makrdownToAst } from "markdown-to-ast";
+import {parse as txtToAst } from "txt-to-ast";
 import { Controller } from "txt-ast-traverse";
 export default class MarkdownProcessor {
     constructor(config) {
@@ -28,8 +28,8 @@ export default class MarkdownProcessor {
                 let comments = [];
                 const controller = new Controller();
                 ast.comments.forEach(comment => {
-                    let mdAST = makrdownToAst(comment.value);
-                    controller.traverse(mdAST, {
+                    let txtAst = txtToAst(comment.value);
+                    controller.traverse(txtAst, {
                         enter(node, parent) {
                             node.loc.start.line += comment.loc.start.line - 1;
                             node.loc.end.line += comment.loc.end.line - 1;
@@ -37,11 +37,13 @@ export default class MarkdownProcessor {
                             node.range[1] += comment.range[1];
                         }
                     });
-                    comments = comments.concat(mdAST.children);
+                    comments = comments.concat(txtAst.children);
                 });
                 return {
                     "type": "Document",
-                    "children": comments
+                    "children": comments,
+                    "range": ast.range,
+                    "loc": ast.loc
                 };
             },
             postProcess(messages, filePath) {
